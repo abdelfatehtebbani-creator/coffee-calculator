@@ -33,15 +33,15 @@
   --roast: #8A5A33; --green: #A7C47E; --crema: #D9AE7E; --field: #2B2018; color-scheme: dark;
 }
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; padding-inline: 16px; padding-block: 0 40px; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; padding-inline: 16px; padding-block: 0 40px; overflow-x: clip; }
 .wrap { max-width: 460px; margin-inline: auto; display: flex; flex-direction: column; gap: 20px; }
 .hero {
-  margin-inline: -16px; padding: 18px 20px 36px; text-align: center;
+  margin-inline: calc(50% - 50vw); padding: 18px 20px 36px; text-align: center;
   background: var(--roast); color: var(--roast-ink);
   background-image: radial-gradient(circle at 85% -20%, rgba(255,255,255,.14), transparent 55%);
   display: flex; flex-direction: column; align-items: center; gap: 12px;
 }
-.lang { align-self: flex-end; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.1); color: inherit; font: 600 .85rem var(--display); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.lang { align-self: flex-end; margin-inline-end: max(0px, calc(50vw - 246px)); border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.1); color: inherit; font: 600 .85rem var(--display); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
 .icon { width: 96px; height: 96px; border-radius: 24px; background: #6B4423; box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.15); display: grid; place-items: center; }
 h1 { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1.25; margin: 4px 0 0; text-wrap: balance; }
 .tag { margin: 0; opacity: .85; max-width: 32ch; }
@@ -89,7 +89,7 @@ ol { margin: 0; padding-inline-start: 1.4em; display: flex; flex-direction: colu
       <li data-i18n="f1">حساب فوري لكمية البن الأخضر والمحمص بالكيلوغرام</li>
       <li data-i18n="f2">تقسيم الشراء بين صنفي الخلطة حسب النسبة</li>
       <li data-i18n="f3">بالعربية والإنجليزية، ويحفظ آخر القيم التي أدخلتها</li>
-      <li data-i18n="f4">يعمل على الآيفون والأندرويد</li>
+      <li data-i18n="f4">يعمل على الآيفون والأندرويد والحاسوب</li>
     </ul>
   </section>
 
@@ -99,10 +99,11 @@ ol { margin: 0; padding-inline-start: 1.4em; display: flex; flex-direction: colu
   </a>
 
   <section class="steps">
-    <h2 data-i18n="howTitle">بعد فتح التطبيق، ثبّته على شاشتك الرئيسية</h2>
+    <h2 data-i18n="howTitle">طريقة التثبيت على جهازك</h2>
     <div class="tabs" role="tablist">
       <button class="tab" id="tab-ios" role="tab" type="button" data-os="ios">iPhone</button>
       <button class="tab" id="tab-android" role="tab" type="button" data-os="android">Android</button>
+      <button class="tab" id="tab-pc" role="tab" type="button" data-os="pc" data-i18n="pcTab">الحاسوب</button>
     </div>
     <ol id="list"></ol>
   </section>
@@ -117,24 +118,26 @@ ol { margin: 0; padding-inline-start: 1.4em; display: flex; flex-direction: colu
       title: "حاسبة أكياس القهوة", tag: "اعرف بالضبط كم تشتري من البن الأخضر قبل التحميص",
       about: "تطبيق بسيط لمحمصات القهوة: أدخل عدد الأكياس ووزنها، ونسبة الفقد بالتحميص ونسبة كل صنف في الخلطة، فيحسب لك فورًا كمية البن الأخضر التي تحتاج شراءها من كل صنف.",
       f1: "حساب فوري لكمية البن الأخضر والمحمص بالكيلوغرام", f2: "تقسيم الشراء بين صنفي الخلطة حسب النسبة",
-      f3: "بالعربية والإنجليزية، ويحفظ آخر القيم التي أدخلتها", f4: "يعمل على الآيفون والأندرويد",
-      cta: "حمّل التطبيق من هنا", howTitle: "بعد فتح التطبيق، ثبّته على شاشتك الرئيسية",
+      f3: "بالعربية والإنجليزية، ويحفظ آخر القيم التي أدخلتها", f4: "يعمل على الآيفون والأندرويد والحاسوب", pcTab: "الحاسوب",
+      cta: "حمّل التطبيق من هنا", howTitle: "طريقة التثبيت على جهازك",
       note: "لا يحتاج متجر تطبيقات ولا يأخذ مساحة من هاتفك.", toggle: "EN",
       ios: ["افتح التطبيق بالزر أعلاه في متصفح Safari.", "اضغط زر المشاركة (المربع والسهم للأعلى).", "اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة»."],
-      android: ["افتح التطبيق بالزر أعلاه في متصفح Chrome.", "اضغط القائمة ⋮ في الزاوية العلوية.", "اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة»."]
+      android: ["افتح التطبيق بالزر أعلاه في متصفح Chrome.", "اضغط القائمة ⋮ في الزاوية العلوية.", "اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة»."],
+      pc: ["افتح هذه الصفحة في متصفح Chrome أو Edge على الحاسوب.", "اضغط زر «حمّل التطبيق من هنا» ثم «تثبيت» (Install).", "أو اضغط أيقونة التثبيت في يمين شريط العنوان. سيظهر التطبيق في قائمة ابدأ وعلى سطح المكتب."]
     },
     en: {
       title: "Coffee Bag Calculator", tag: "Know exactly how much green coffee to buy before roasting",
       about: "A simple app for coffee roasters. Enter the number of bags, their weight, the roast loss and each origin's share of the blend, and it instantly tells you how much green coffee to buy of each.",
       f1: "Instant green and roasted totals in kilograms", f2: "Splits the purchase between the two blend origins",
-      f3: "Arabic and English, and remembers your last values", f4: "Works on iPhone and Android",
-      cta: "Get the app here", howTitle: "After opening the app, add it to your home screen",
+      f3: "Arabic and English, and remembers your last values", f4: "Works on iPhone, Android and computers", pcTab: "Computer",
+      cta: "Get the app here", howTitle: "How to install on your device",
       note: "No app store needed, and it takes no space on your phone.", toggle: "ع",
       ios: ["Open the app with the button above in Safari.", "Tap the Share button (square with an up arrow).", "Choose “Add to Home Screen”, then “Add”."],
-      android: ["Open the app with the button above in Chrome.", "Tap the ⋮ menu in the top corner.", "Choose “Add to Home screen”, then “Add”."]
+      android: ["Open the app with the button above in Chrome.", "Tap the ⋮ menu in the top corner.", "Choose “Add to Home screen”, then “Add”."],
+      pc: ["Open this page in Chrome or Edge on your computer.", "Click “Get the app here”, then “Install”.", "Or click the install icon at the right of the address bar. The app appears in your Start menu and desktop."]
     }
   };
-  var lang = "ar", os = /android/i.test(navigator.userAgent) ? "android" : "ios";
+  var lang = "ar", ua = navigator.userAgent, os = /android/i.test(ua) ? "android" : (/iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && navigator.maxTouchPoints > 1)) ? "ios" : "pc";
   try { lang = localStorage.getItem("coffee-dl-lang") || "ar"; } catch (e) {}
   function render() {
     var t = T[lang];
