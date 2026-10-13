@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>حاسبة أكياس القهوة</title>
+<meta name="theme-color" content="#6B4423">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="حاسبة القهوة">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column — roast-card header, live result up top, inputs as a quiet form below */
+:root {
+  --bg: #F6F0EA;
+  --surface: #FFFFFF;
+  --ink: #2B1D14;
+  --muted: #7A6656;
+  --line: #E7DCD1;
+  --roast: #6B4423;
+  --roast-ink: #FFF8F1;
+  --green: #5E7A3A;
+  --green-soft: #E6EDDB;
+  --crema: #C89B6D;
+  --field: #FBF6EF;
+  --danger: #A3402B;
+  --display: "Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --body: "IBM Plex Sans Arabic", "Readex Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17110D; --surface: #221913; --ink: #F3E9DF; --muted: #B29C89; --line: #3A2C22;
+    --roast: #8A5A33; --roast-ink: #FFF8F1; --green: #A7C47E; --green-soft: #2A321E;
+    --crema: #D9AE7E; --field: #2B2018; --danger: #E08A72; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17110D; --surface: #221913; --ink: #F3E9DF; --muted: #B29C89; --line: #3A2C22;
+  --roast: #8A5A33; --roast-ink: #FFF8F1; --green: #A7C47E; --green-soft: #2A321E;
+  --crema: #D9AE7E; --field: #2B2018; --danger: #E08A72; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 0 32px;
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 460px; margin-inline: auto; display: flex; flex-direction: column; gap: 16px; }
+.num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
+
+header.hero {
+  margin-inline: -16px; padding: 20px 20px 72px;
+  background: var(--roast); color: var(--roast-ink);
+  background-image: radial-gradient(circle at 85% -20%, rgba(255,255,255,.14), transparent 55%);
+}
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: 460px; margin-inline: auto; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.bean { width: 34px; height: 34px; flex: none; }
+h1 { font-family: var(--display); font-weight: 700; font-size: 1.25rem; margin: 0; line-height: 1.25; text-wrap: balance; }
+.sub { margin: 2px 0 0; font-size: .82rem; opacity: .8; }
+.lang {
+  flex: none; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.1); color: inherit;
+  font: 600 .85rem var(--display); padding: 6px 12px; border-radius: 999px; cursor: pointer;
+}
+.lang:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--crema); outline-offset: 2px; }
+
+/* Result card overlapping the header */
+.result {
+  margin-top: -60px; background: var(--surface); border-radius: 20px; padding: 20px;
+  box-shadow: 0 10px 30px rgba(43,29,20,.12), 0 1px 0 var(--line);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.eyebrow { font-size: .78rem; color: var(--muted); letter-spacing: .02em; margin: 0; }
+.big { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.big .val { font-family: var(--display); font-weight: 700; font-size: 2.6rem; line-height: 1; color: var(--green); }
+.big .unit { font-weight: 600; color: var(--muted); }
+.split { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: var(--line); }
+.split .a { background: var(--green); transition: width .25s ease; }
+.split .b { background: var(--crema); transition: width .25s ease; }
+.buy { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.buy > div { background: var(--field); border-radius: 14px; padding: 12px; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.buy .lbl, .buy .v, .buy .pct { padding: 0; }
+.buy .lbl { display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--muted); }
+.dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.buy .v { font-family: var(--display); font-weight: 600; font-size: 1.3rem; margin-top: 2px; }
+.buy .pct { font-size: .78rem; color: var(--muted); }
+.roasted { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: .92rem; }
+.roasted strong { font-family: var(--display); font-weight: 600; }
+.err { color: var(--danger); font-size: .9rem; margin: 0; }
+
+/* Inputs */
+.form { background: var(--surface); border-radius: 20px; padding: 6px 16px; border: 1px solid var(--line); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 14px; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: 0; }
+.row label { font-size: .95rem; min-width: 0; }
+.row label small { display: block; color: var(--muted); font-size: .78rem; }
+.stepper { display: flex; align-items: center; flex: none; background: var(--field); border-radius: 12px; border: 1px solid var(--line); direction: ltr; }
+.stepper button {
+  width: 38px; height: 42px; border: 0; background: transparent; color: var(--roast);
+  font: 600 1.3rem var(--display); cursor: pointer; border-radius: 12px;
+}
+:root[data-theme="dark"] .stepper button { color: var(--crema); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stepper button { color: var(--crema); } }
+.stepper button:active { background: var(--line); }
+.stepper input {
+  width: 64px; height: 42px; border: 0; background: transparent; color: var(--ink); text-align: center;
+  font: 600 1.05rem var(--display); font-variant-numeric: tabular-nums; -moz-appearance: textfield;
+}
+.stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper .u { font-size: .8rem; color: var(--muted); padding-inline-end: 4px; }
+
+.blend { padding-block: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.blend-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: .95rem; }
+.blend-head .num { font-family: var(--display); font-weight: 600; }
+input[type=range] { width: 100%; accent-color: var(--green); height: 28px; direction: ltr; }
+.blend-ends { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); }
+
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: .82rem; color: var(--muted); }
+.reset { background: none; border: 1px solid var(--line); color: var(--ink); font: 500 .85rem var(--body); padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .split .a, .split .b { transition: none; } }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="hero">
+    <div class="top">
+      <div class="brand">
+        <svg class="bean" viewBox="0 0 40 40" aria-hidden="true">
+          <ellipse cx="20" cy="20" rx="12" ry="16" transform="rotate(30 20 20)" fill="#C89B6D"/>
+          <path d="M14 8 C 24 16, 16 24, 26 32" stroke="#6B4423" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <h1 data-i18n="title">حاسبة أكياس القهوة</h1>
+          <p class="sub" data-i18n="subtitle">كم تشتري من البن الأخضر قبل التحميص</p>
+        </div>
+      </div>
+      <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+    </div>
+  </header>
+
+  <section class="result" aria-live="polite">
+    <div>
+      <p class="eyebrow" data-i18n="greenTotal">إجمالي القهوة الخضراء المطلوبة قبل التحميص</p>
+      <div class="big"><span class="val num" id="green">0.000</span><span class="unit" data-i18n="kg">كغ</span></div>
+    </div>
+    <p class="err" id="err" hidden></p>
+    <div class="split" aria-hidden="true"><div class="a" id="barA"></div><div class="b" id="barB"></div></div>
+    <div class="buy">
+      <div>
+        <div class="lbl"><span class="dot" style="background:var(--green)"></span><span data-i18n="buy1">شراء الصنف الأول</span></div>
+        <div class="v"><span class="num" id="g1">0.000</span> <span data-i18n="kg">كغ</span></div>
+        <div class="pct"><span class="num" id="p1">20%</span></div>
+      </div>
+      <div>
+        <div class="lbl"><span class="dot" style="background:var(--crema)"></span><span data-i18n="buy2">شراء الصنف الثاني</span></div>
+        <div class="v"><span class="num" id="g2">0.000</span> <span data-i18n="kg">كغ</span></div>
+        <div class="pct"><span class="num" id="p2">80%</span></div>
+      </div>
+    </div>
+    <div class="roasted">
+      <span data-i18n="roastedTotal">إجمالي القهوة المحمصة المطلوبة</span>
+      <strong><span class="num" id="roasted">0.000</span> <span data-i18n="kg">كغ</span></strong>
+    </div>
+  </section>
+
+  <form class="form" id="form" autocomplete="off" onsubmit="return false">
+    <div class="row">
+      <label for="count"><span data-i18n="count">عدد الأكياس المطلوبة</span></label>
+      <div class="stepper"><button type="button" data-step="count:-1" aria-label="-">−</button><input id="count" type="number" inputmode="numeric" min="0" step="1"><button type="button" data-step="count:1" aria-label="+">+</button></div>
+    </div>
+    <div class="row">
+      <label for="weight"><span data-i18n="weight">وزن الكيس بعد التحميص</span><small data-i18n="grams">بالغرام</small></label>
+      <div class="stepper"><button type="button" data-step="weight:-10" aria-label="-">−</button><input id="weight" type="number" inputmode="decimal" min="0" step="any"><button type="button" data-step="weight:10" aria-label="+">+</button></div>
+    </div>
+    <div class="row">
+      <label for="waste"><span data-i18n="waste">هامش التبذير لكل كيس</span><small data-i18n="grams">بالغرام</small></label>
+      <div class="stepper"><button type="button" data-step="waste:-1" aria-label="-">−</button><input id="waste" type="number" inputmode="decimal" min="0" step="any"><button type="button" data-step="waste:1" aria-label="+">+</button></div>
+    </div>
+    <div class="row">
+      <label for="loss"><span data-i18n="loss">فقدان الوزن بالتحميص</span><small data-i18n="percent">نسبة مئوية %</small></label>
+      <div class="stepper"><button type="button" data-step="loss:-1" aria-label="-">−</button><input id="loss" type="number" inputmode="decimal" min="0" max="99" step="any"><button type="button" data-step="loss:1" aria-label="+">+</button></div>
+    </div>
+    <div class="blend">
+      <div class="blend-head">
+        <label for="ratio" data-i18n="ratio">نسبة الصنف الأول من الخلطة</label>
+        <span class="num" id="ratioOut">20%</span>
+      </div>
+      <input id="ratio" type="range" min="0" max="100" step="1">
+      <div class="blend-ends"><span data-i18n="first">الصنف الأول</span><span><span data-i18n="second">الصنف الثاني</span> <span class="num" id="ratio2Out">80%</span></span></div>
+    </div>
+  </form>
+
+  <div class="foot">
+    <span data-i18n="hint">غيّر القيم وستتحدث النتائج تلقائيًا.</span>
+    <button class="reset" id="reset" type="button" data-i18n="reset">القيم الافتراضية</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var DEFAULTS = { count: 100, weight: 200, waste: 7, loss: 20, ratio: 20 };
+  var T = {
+    ar: {
+      title: "حاسبة أكياس القهوة", subtitle: "كم تشتري من البن الأخضر قبل التحميص",
+      greenTotal: "إجمالي القهوة الخضراء المطلوبة قبل التحميص", kg: "كغ",
+      buy1: "شراء الصنف الأول", buy2: "شراء الصنف الثاني", roastedTotal: "إجمالي القهوة المحمصة المطلوبة",
+      count: "عدد الأكياس المطلوبة", weight: "وزن الكيس بعد التحميص", waste: "هامش التبذير لكل كيس",
+      grams: "بالغرام", loss: "فقدان الوزن بالتحميص", percent: "نسبة مئوية %",
+      ratio: "نسبة الصنف الأول من الخلطة", first: "الصنف الأول", second: "الصنف الثاني",
+      hint: "غيّر القيم وستتحدث النتائج تلقائيًا.", reset: "القيم الافتراضية",
+      errLoss: "فقدان الوزن يجب أن يكون أقل من 100%.", errNeg: "أدخل قيمًا موجبة فقط.", toggle: "EN"
+    },
+    en: {
+      title: "Coffee Bag Calculator", subtitle: "How much green coffee to buy before roasting",
+      greenTotal: "Total green coffee needed before roasting", kg: "kg",
+      buy1: "First origin", buy2: "Second origin", roastedTotal: "Total roasted coffee needed",
+      count: "Number of bags", weight: "Bag weight after roasting", waste: "Waste allowance per bag",
+      grams: "grams", loss: "Roast weight loss", percent: "percent %",
+      ratio: "First origin share of the blend", first: "First origin", second: "Second origin",
+      hint: "Change any value and results update instantly.", reset: "Reset defaults",
+      errLoss: "Roast loss must be below 100%.", errNeg: "Enter positive values only.", toggle: "ع"
+    }
+  };
+  var KEY = "coffee-calc-v1";
+  var $ = function (id) { return document.getElementById(id); };
+  var fields = ["count", "weight", "waste", "loss", "ratio"];
+  var state = { lang: "ar" };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "null"); if (saved) state = saved; } catch (e) {}
+  fields.forEach(function (f) { $(f).value = (state[f] != null ? state[f] : DEFAULTS[f]); });
+
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function fmt(n) { return n.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 }); }
+  function num(f) { var v = parseFloat($(f).value); return isFinite(v) ? v : 0; }
+
+  // Same formulas as the Excel sheet (B7..B11)
+  function calc() {
+    var count = num("count"), weight = num("weight"), waste = num("waste");
+    var loss = num("loss") / 100, r1 = Math.min(100, Math.max(0, num("ratio"))) / 100, r2 = 1 - r1;
+    var roasted = count * (weight + waste) / 1000;
+    var t = T[state.lang], err = "";
+    if (count < 0 || weight < 0 || waste < 0 || loss < 0) err = t.errNeg;
+    else if (loss >= 1) err = t.errLoss;
+    var green = err ? 0 : roasted / (1 - loss);
+    $("err").hidden = !err; $("err").textContent = err;
+    $("green").textContent = fmt(green);
+    $("roasted").textContent = fmt(err ? 0 : roasted);
+    $("g1").textContent = fmt(green * r1);
+    $("g2").textContent = fmt(green * r2);
+    var p1 = Math.round(r1 * 100), p2 = 100 - p1;
+    $("p1").textContent = $("ratioOut").textContent = p1 + "%";
+    $("p2").textContent = $("ratio2Out").textContent = p2 + "%";
+    $("barA").style.width = p1 + "%"; $("barB").style.width = p2 + "%";
+    fields.forEach(function (f) { state[f] = $(f).value; });
+    save();
+  }
+
+  function applyLang() {
+    var t = T[state.lang], ar = state.lang === "ar";
+    document.documentElement.lang = state.lang;
+    document.documentElement.dir = ar ? "rtl" : "ltr";
+    document.title = t.title;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t[el.getAttribute("data-i18n")]; });
+    $("lang").textContent = t.toggle;
+    $("lang").setAttribute("aria-label", ar ? "Switch to English" : "التبديل إلى العربية");
+    calc();
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-step]"); if (!b) return;
+    var p = b.getAttribute("data-step").split(":"), inp = $(p[0]);
+    var v = Math.max(0, (parseFloat(inp.value) || 0) + parseFloat(p[1]));
+    if (p[0] === "loss") v = Math.min(99, v);
+    inp.value = Math.round(v * 1000) / 1000; calc();
+  });
+  fields.forEach(function (f) { $(f).addEventListener("input", calc); });
+  $("lang").addEventListener("click", function () { state.lang = state.lang === "ar" ? "en" : "ar"; save(); applyLang(); });
+  $("reset").addEventListener("click", function () { fields.forEach(function (f) { $(f).value = DEFAULTS[f]; }); calc(); });
+  applyLang();
+})();
+</script>
+<script>if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("../sw.js",{scope:"../"}).catch(function(){})})}</script>
+</body>
+</html>

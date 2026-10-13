@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6B4423">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="حاسبة القهوة">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<title>تحميل حاسبة القهوة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: single centered column — brown hero with app icon, one big download button, short install steps */
+:root {
+  --bg: #F6F0EA; --surface: #FFFFFF; --ink: #2B1D14; --muted: #7A6656; --line: #E7DCD1;
+  --roast: #6B4423; --roast-ink: #FFF8F1; --green: #5E7A3A; --crema: #C89B6D; --field: #FBF6EF;
+  --display: "Readex Pro", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --body: "IBM Plex Sans Arabic", "Readex Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17110D; --surface: #221913; --ink: #F3E9DF; --muted: #B29C89; --line: #3A2C22;
+    --roast: #8A5A33; --green: #A7C47E; --crema: #D9AE7E; --field: #2B2018; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17110D; --surface: #221913; --ink: #F3E9DF; --muted: #B29C89; --line: #3A2C22;
+  --roast: #8A5A33; --green: #A7C47E; --crema: #D9AE7E; --field: #2B2018; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; padding-inline: 16px; padding-block: 0 40px; }
+.wrap { max-width: 460px; margin-inline: auto; display: flex; flex-direction: column; gap: 20px; }
+.hero {
+  margin-inline: -16px; padding: 18px 20px 36px; text-align: center;
+  background: var(--roast); color: var(--roast-ink);
+  background-image: radial-gradient(circle at 85% -20%, rgba(255,255,255,.14), transparent 55%);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.lang { align-self: flex-end; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.1); color: inherit; font: 600 .85rem var(--display); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.icon { width: 96px; height: 96px; border-radius: 24px; background: #6B4423; box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.15); display: grid; place-items: center; }
+h1 { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1.25; margin: 4px 0 0; text-wrap: balance; }
+.tag { margin: 0; opacity: .85; max-width: 32ch; }
+.intro { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.intro p { margin: 0; }
+.feats { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.feats li { display: flex; gap: 10px; align-items: flex-start; }
+.feats li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex: none; margin-top: .6em; }
+.cta {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: var(--green); color: #fff; text-decoration: none; font: 700 1.2rem var(--display);
+  padding: 18px 20px; border-radius: 16px; box-shadow: 0 8px 20px rgba(94,122,58,.3);
+}
+:root[data-theme="dark"] .cta { color: #17110D; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cta { color: #17110D; } }
+.cta:focus-visible, .lang:focus-visible, .tab:focus-visible { outline: 2px solid var(--crema); outline-offset: 3px; }
+.steps { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.steps h2 { font-family: var(--display); font-size: 1.05rem; margin: 0; }
+.tabs { display: flex; gap: 6px; background: var(--field); padding: 4px; border-radius: 12px; }
+.tab { flex: 1; border: 0; background: transparent; color: var(--muted); font: 600 .95rem var(--display); padding: 8px; border-radius: 9px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+ol { margin: 0; padding-inline-start: 1.4em; display: flex; flex-direction: column; gap: 6px; }
+.note { font-size: .85rem; color: var(--muted); margin: 0; text-align: center; }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="hero">
+    <button class="lang" id="lang" type="button">EN</button>
+    <div class="icon" aria-hidden="true">
+      <svg width="60" height="60" viewBox="0 0 40 40">
+        <ellipse cx="20" cy="20" rx="12" ry="16" transform="rotate(30 20 20)" fill="#C89B6D"/>
+        <path d="M14 8 C 24 16, 16 24, 26 32" stroke="#6B4423" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 data-i18n="title">حاسبة أكياس القهوة</h1>
+    <p class="tag" data-i18n="tag">اعرف بالضبط كم تشتري من البن الأخضر قبل التحميص</p>
+  </header>
+
+  <section class="intro">
+    <p data-i18n="about">تطبيق بسيط لمحمصات القهوة: أدخل عدد الأكياس ووزنها، ونسبة الفقد بالتحميص ونسبة كل صنف في الخلطة، فيحسب لك فورًا كمية البن الأخضر التي تحتاج شراءها من كل صنف.</p>
+    <ul class="feats">
+      <li data-i18n="f1">حساب فوري لكمية البن الأخضر والمحمص بالكيلوغرام</li>
+      <li data-i18n="f2">تقسيم الشراء بين صنفي الخلطة حسب النسبة</li>
+      <li data-i18n="f3">بالعربية والإنجليزية، ويحفظ آخر القيم التي أدخلتها</li>
+      <li data-i18n="f4">يعمل على الآيفون والأندرويد</li>
+    </ul>
+  </section>
+
+  <a class="cta" id="cta" href="app/">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+    <span data-i18n="cta">حمّل التطبيق من هنا</span>
+  </a>
+
+  <section class="steps">
+    <h2 data-i18n="howTitle">بعد فتح التطبيق، ثبّته على شاشتك الرئيسية</h2>
+    <div class="tabs" role="tablist">
+      <button class="tab" id="tab-ios" role="tab" type="button" data-os="ios">iPhone</button>
+      <button class="tab" id="tab-android" role="tab" type="button" data-os="android">Android</button>
+    </div>
+    <ol id="list"></ol>
+  </section>
+
+  <p class="note" data-i18n="note">لا يحتاج متجر تطبيقات ولا يأخذ مساحة من هاتفك.</p>
+</div>
+
+<script>
+(function () {
+  var T = {
+    ar: {
+      title: "حاسبة أكياس القهوة", tag: "اعرف بالضبط كم تشتري من البن الأخضر قبل التحميص",
+      about: "تطبيق بسيط لمحمصات القهوة: أدخل عدد الأكياس ووزنها، ونسبة الفقد بالتحميص ونسبة كل صنف في الخلطة، فيحسب لك فورًا كمية البن الأخضر التي تحتاج شراءها من كل صنف.",
+      f1: "حساب فوري لكمية البن الأخضر والمحمص بالكيلوغرام", f2: "تقسيم الشراء بين صنفي الخلطة حسب النسبة",
+      f3: "بالعربية والإنجليزية، ويحفظ آخر القيم التي أدخلتها", f4: "يعمل على الآيفون والأندرويد",
+      cta: "حمّل التطبيق من هنا", howTitle: "بعد فتح التطبيق، ثبّته على شاشتك الرئيسية",
+      note: "لا يحتاج متجر تطبيقات ولا يأخذ مساحة من هاتفك.", toggle: "EN",
+      ios: ["افتح التطبيق بالزر أعلاه في متصفح Safari.", "اضغط زر المشاركة (المربع والسهم للأعلى).", "اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة»."],
+      android: ["افتح التطبيق بالزر أعلاه في متصفح Chrome.", "اضغط القائمة ⋮ في الزاوية العلوية.", "اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة»."]
+    },
+    en: {
+      title: "Coffee Bag Calculator", tag: "Know exactly how much green coffee to buy before roasting",
+      about: "A simple app for coffee roasters. Enter the number of bags, their weight, the roast loss and each origin's share of the blend, and it instantly tells you how much green coffee to buy of each.",
+      f1: "Instant green and roasted totals in kilograms", f2: "Splits the purchase between the two blend origins",
+      f3: "Arabic and English, and remembers your last values", f4: "Works on iPhone and Android",
+      cta: "Get the app here", howTitle: "After opening the app, add it to your home screen",
+      note: "No app store needed, and it takes no space on your phone.", toggle: "ع",
+      ios: ["Open the app with the button above in Safari.", "Tap the Share button (square with an up arrow).", "Choose “Add to Home Screen”, then “Add”."],
+      android: ["Open the app with the button above in Chrome.", "Tap the ⋮ menu in the top corner.", "Choose “Add to Home screen”, then “Add”."]
+    }
+  };
+  var lang = "ar", os = /android/i.test(navigator.userAgent) ? "android" : "ios";
+  try { lang = localStorage.getItem("coffee-dl-lang") || "ar"; } catch (e) {}
+  function render() {
+    var t = T[lang];
+    document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.title = lang === "ar" ? "تحميل حاسبة القهوة" : "Get Coffee Calculator";
+    document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t[el.getAttribute("data-i18n")]; });
+    document.getElementById("lang").textContent = t.toggle;
+    document.querySelectorAll(".tab").forEach(function (b) { b.setAttribute("aria-selected", b.getAttribute("data-os") === os); });
+    document.getElementById("list").innerHTML = t[os].map(function (s) { return "<li>" + s + "</li>"; }).join("");
+  }
+  document.getElementById("lang").addEventListener("click", function () {
+    lang = lang === "ar" ? "en" : "ar"; try { localStorage.setItem("coffee-dl-lang", lang); } catch (e) {} render();
+  });
+  document.querySelectorAll(".tab").forEach(function (b) { b.addEventListener("click", function () { os = b.getAttribute("data-os"); render(); }); });
+  render();
+})();
+</script>
+<script>
+var deferred=null;
+addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferred=e;});
+document.getElementById("cta").addEventListener("click",function(e){
+  if(deferred){e.preventDefault();deferred.prompt();deferred.userChoice.finally(function(){deferred=null;});}
+});
+if("serviceWorker" in navigator){addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script>
+</body>
+</html>
